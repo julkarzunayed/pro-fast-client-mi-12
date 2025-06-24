@@ -4,7 +4,7 @@
 - ``tailwindcss @tailwindcss/vite``
 - ``react-router``
 - ``-D daisyui@latest``
-- ````
+- ``react-responsive-carousel``
 - ````
 - ````
 - ````
