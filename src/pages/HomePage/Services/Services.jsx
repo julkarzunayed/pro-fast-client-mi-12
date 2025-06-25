@@ -38,10 +38,12 @@ const servicesData = [
 
 const Services = () => {
   return (
-    <div className="bg-base-300 py-12 my-6 rounded-2xl px-6">
+    <div
+      data-aos="fade-in"
+      className="bg-[#03373D] py-12 my-6 rounded-2xl px-6">
       <div className="text-center mb-8">
-        <h2 className="text-4xl font-bold mb-4">Our Services</h2>
-        <p className="max-w-4xl mx-auto text-gray-600">Enjoy fast, reliable parcel delivery with real-time tracking and zero hassle. From personal packages to business shipments — we deliver on time, every time.</p>
+        <h2 className="text-4xl text-white font-bold mb-4">Our Services</h2>
+        <p className="max-w-4xl text-gray-300 mx-auto">Enjoy fast, reliable parcel delivery with real-time tracking and zero hassle. From personal packages to business shipments — we deliver on time, every time.</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
