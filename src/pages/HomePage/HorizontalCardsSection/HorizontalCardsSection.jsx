@@ -2,7 +2,7 @@ import React from 'react';
 import HorizontalCard from './HorizontalCard/HorizontalCard';
 import image1 from '../../../assets/illustration/Illustration.png'
 import image2 from '../../../assets/illustration/Vector.png'
-import image3 from '../../../assets/illustration/Group 4.png'
+
 
 const HorizontalCardsSection = () => {
     const cardsData = [

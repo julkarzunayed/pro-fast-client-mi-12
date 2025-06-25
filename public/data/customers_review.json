@@ -1,0 +1,72 @@
+[
+  {
+    "id": 1,
+    "comment": "The service was fantastic! The delivery was on time, and the support team was very helpful.",
+    "customerName": "John Doe",
+    "company": "Doe Logistics",
+    "customerImage": "customer1.jpg"
+  },
+  {
+    "id": 2,
+    "comment": "Great experience! Everything arrived intact and faster than expected.",
+    "customerName": "Jane Smith",
+    "company": "Smith Enterprises",
+    "customerImage": "customer2.jpg"
+  },
+  {
+    "id": 3,
+    "comment": "Reliable and professional. Highly recommended for all logistics needs.",
+    "customerName": "Alice Johnson",
+    "company": "Johnson Corp",
+    "customerImage": "customer3.jpg"
+  },
+  {
+    "id": 4,
+    "comment": "Customer service was excellent, and the process was seamless.",
+    "customerName": "Mark Lee",
+    "company": "Lee Solutions",
+    "customerImage": "customer4.jpg"
+  },
+  {
+    "id": 5,
+    "comment": "Affordable pricing with exceptional quality of service. Kudos to the team!",
+    "customerName": "Sarah Brown",
+    "company": "Brown Logistics",
+    "customerImage": "customer5.jpg"
+  },
+  {
+    "id": 6,
+    "comment": "They go above and beyond to ensure satisfaction. A truly trusted partner.",
+    "customerName": "Tom Wilson",
+    "company": "Wilson Partners",
+    "customerImage": "customer6.jpg"
+  },
+  {
+    "id": 7,
+    "comment": "Top-notch service and excellent attention to detail.",
+    "customerName": "Emily Davis",
+    "company": "Davis Freight",
+    "customerImage": "customer7.jpg"
+  },
+  {
+    "id": 8,
+    "comment": "Fast, reliable, and professional. I’ll definitely use them again.",
+    "customerName": "Chris White",
+    "company": "White Industries",
+    "customerImage": "customer8.jpg"
+  },
+  {
+    "id": 9,
+    "comment": "The best in the business! Highly satisfied with their logistics services.",
+    "customerName": "Anna Green",
+    "company": "Green Corp",
+    "customerImage": "customer9.jpg"
+  },
+  {
+    "id": 10,
+    "comment": "Exceptional service that exceeded my expectations. Highly recommended.",
+    "customerName": "Robert Taylor",
+    "company": "Taylor Group",
+    "customerImage": "customer10.jpg"
+  }
+]

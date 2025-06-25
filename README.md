@@ -7,4 +7,8 @@
 - ``react-responsive-carousel``
 - ``react-fast-marquee``
 - ``react-slick slick-carousel``
-- ``aos --save``
+- ``aos``
+- ``swiper/react``
+- ````
+- ````
+- ````

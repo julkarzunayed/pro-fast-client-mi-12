@@ -4,6 +4,7 @@ import Services from '../Services/Services';
 import BrandsLogosCarousel from '../BrandsLogosCarousel/BrandsLogosCarousel';
 import HorizontalCardsSection from '../HorizontalCardsSection/HorizontalCardsSection';
 import BecomeMerchant from '../BecomeMerchant/BecomeMerchant';
+import OurCustomersReview from '../OurCustomersReview/OurCustomersReview';
 
 const Home = () => {
     return (
@@ -19,6 +20,8 @@ const Home = () => {
             <hr className='border-t border-dashed border-gray-400'/>
 
             <BecomeMerchant/>
+
+            <OurCustomersReview/>
         </div>
     );
 };
