@@ -49,78 +49,6 @@ const reviewDataResponse = fetch(`/data/customers_review.json`).then(res => res.
 const OurCustomerReview = () => {
     // Fake JSON data for customer reviews
     const customerReviews = use(reviewDataResponse);
-    const customerReviewsDisabled = [
-        {
-            id: 1,
-            comment: "The service was fantastic! The delivery was on time, and the support team was very helpful.",
-            customerName: "John Doe",
-            company: "Doe Logistics",
-            customerImage: "customer1.jpg",
-        },
-        {
-            id: 2,
-            comment: "Absolutely outstanding quality and professional service. Highly recommended!",
-            customerName: "Jane Smith",
-            company: "Smith Innovations",
-            customerImage: "customer2.jpg",
-        },
-        {
-            id: 3,
-            comment: "A posture corrector works by providing support and gentle alignment to your shoulders, back, and spine, encouraging you to maintain proper posture throughout the day.",
-            customerName: "Awlad Hossin",
-            company: "Senior Product Designer",
-            customerImage: "customer3.jpg",
-        },
-        {
-            id: 4,
-            comment: "Efficient and reliable. Our business operations have improved significantly thanks to their solutions.",
-            customerName: "Michael Johnson",
-            company: "Johnson Tech",
-            customerImage: "customer4.jpg",
-        },
-        {
-            id: 5,
-            comment: "Excellent communication and timely execution. A pleasure to work with!",
-            customerName: "Emily Davis",
-            company: "Davis Enterprises",
-            customerImage: "customer5.jpg",
-        },
-        {
-            id: 6,
-            comment: "Their expertise is unmatched. They truly understand our needs and deliver beyond expectations.",
-            customerName: "David Wilson",
-            company: "Wilson & Co.",
-            customerImage: "customer6.jpg",
-        },
-        {
-            id: 7,
-            comment: "Very user-friendly products and exceptional customer support. Couldn't be happier!",
-            customerName: "Sarah Brown",
-            company: "Brown Digital",
-            customerImage: "customer7.jpg",
-        },
-        {
-            id: 8,
-            comment: "They transformed our workflow! Seamless integration and noticeable improvements.",
-            customerName: "Chris Miller",
-            company: "Miller Solutions",
-            customerImage: "customer8.jpg",
-        },
-        {
-            id: 9,
-            comment: "Top-notch service from start to finish. Highly professional and effective.",
-            customerName: "Olivia Garcia",
-            company: "Garcia Group",
-            customerImage: "customer9.jpg",
-        },
-        {
-            id: 10,
-            comment: "Incredible value for money. Their services have boosted our productivity immensely.",
-            customerName: "James Rodriguez",
-            company: "Rodriguez Corp.",
-            customerImage: "customer10.jpg",
-        },
-    ];
 
     const [currentIndex, setCurrentIndex] = useState(0);
     const carouselRef = useRef(null);
@@ -157,7 +85,9 @@ const OurCustomerReview = () => {
     };
 
     return (
-        <div className="bg-gray-100 py-16 px-4 font-sans overflow-hidden">
+        <div
+            data-aos="zoom-in"
+            className="bg-gray-100 py-16 px-4 font-sans overflow-hidden">
             {/* Header Section */}
             <div className="max-w-7xl mx-auto text-center mb-12">
                 <h2 className="text-4xl md:text-5xl font-bold text-gray-800 leading-tight mb-4">

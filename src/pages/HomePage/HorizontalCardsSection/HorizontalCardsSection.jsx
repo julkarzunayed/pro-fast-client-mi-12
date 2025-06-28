@@ -32,12 +32,14 @@ const HorizontalCardsSection = () => {
     return (
         <div
             data-aos="fade-left"
+            data-aos-duration="700"
             className="p-8 mx-10">
             {/* <h2 className="text-3xl font-bold text-secondary-content text-center mb-6">Our Features</h2> */}
             <div className="space-y">
                 {cardsData.map((card, index) => (
                     <HorizontalCard
                         key={index}
+                        index={index}
                         card={card}
                     />
                 ))}

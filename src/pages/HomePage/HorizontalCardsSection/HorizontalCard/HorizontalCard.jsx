@@ -1,6 +1,6 @@
 import React from 'react';
 
-const HorizontalCard = ({ card }) => {
+const HorizontalCard = ({ card, index }) => {
     const {
         title,
         image,
@@ -8,6 +8,8 @@ const HorizontalCard = ({ card }) => {
     } = card;
     return (
         <div
+            data-aos="fade-left"
+            data-aos-duration={`${index}000`}
             className="flex bg-white rounded-2xl shadow-md p-6 mb-7">
             <div className="p-4 max-w-[250px] flex items-center justify-center">
                 <img src={image} alt={title} className=" mr-4" />
