@@ -1,7 +1,9 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import useAuth from '../../../hooks/useAuth';
 
 const Register = () => {
+    const { createUser } = useAuth();
     const {
         register,
         handleSubmit,
@@ -9,7 +11,14 @@ const Register = () => {
     } = useForm();
 
     const onSubmit = data => {
-        console.log(data)
+        createUser(data.email, data.password)
+            .then(res => {
+                console.log(res.user)
+            })
+            .catch(err => {
+                console.error(err)
+            })
+        console.log(data, createUser)
     }
     console.log(errors)
     return (
@@ -44,7 +53,7 @@ const Register = () => {
                             ...register('password', {
                                 required: 'Password is required',
                                 minLength: {
-                                    value : 6 ,
+                                    value: 6,
                                     message: 'Password must be at least 6 character long.'
                                 },
                                 pattern: {
@@ -54,7 +63,7 @@ const Register = () => {
                             })
                             }
                             className="input w-full"
-                            placeholder="Password" />
+                            placeholder="Abc123@" />
                         {
                             errors?.password &&
                             <p className="text-red-500" dangerouslySetInnerHTML={{ __html: errors?.password?.message.replace(/ - /g, '  <br/> -- ') }} />
