@@ -1,12 +1,24 @@
 import React from 'react';
-import { NavLink } from 'react-router';
+import { Link, NavLink } from 'react-router';
 import ProFastLogo from '../../../components/ProFastLogo/ProFastLogo';
+import useAuth from '../../../hooks/useAuth';
 
 const NavBar = () => {
+    const { user, userLogout } = useAuth()
     const navList = <>
         <li><NavLink to='/'>Home</NavLink></li>
         <li><NavLink to='/about'>About</NavLink></li>
     </>
+
+    const handleLogout = () => {
+        userLogout()
+            .then(() => {
+                alert('Sign out successful')
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }
     return (
         <div className="navbar bg-base-100 shadow-sm">
             <div className="navbar-start">
@@ -20,9 +32,9 @@ const NavBar = () => {
                         {navList}
                     </ul>
                 </div>
-                <a className="btn btn-ghost text-xl">
+                <span className="btn btn-ghost text-xl">
                     <ProFastLogo></ProFastLogo>
-                </a>
+                </span>
             </div>
             <div className="navbar-center hidden lg:flex">
                 <ul className="menu menu-horizontal px-1">
@@ -30,7 +42,16 @@ const NavBar = () => {
                 </ul>
             </div>
             <div className="navbar-end">
-                <a className="btn">Button</a>
+                {
+                    user ?
+                    <button onClick={handleLogout} className='btn btn-primary text-black'>
+                        Logout
+                    </button>
+                    :
+                    <Link to={`/login`} className='btn btn-primary text-black'>
+                        Login
+                    </Link>
+                }
             </div>
         </div>
     );

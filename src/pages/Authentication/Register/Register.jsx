@@ -1,9 +1,12 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import useAuth from '../../../hooks/useAuth';
+import { Link, useLocation, useNavigate } from 'react-router';
 
 const Register = () => {
     const { createUser } = useAuth();
+    const navigate = useNavigate();
+    const location = useLocation();
     const {
         register,
         handleSubmit,
@@ -13,17 +16,18 @@ const Register = () => {
     const onSubmit = data => {
         createUser(data.email, data.password)
             .then(res => {
-                console.log(res.user)
+                // console.log(res.user)
+                res
+                navigate(location.state || '/')
             })
             .catch(err => {
                 console.error(err)
             })
         console.log(data, createUser)
     }
-    console.log(errors)
     return (
         <div className=' w-full flex items-center justify-center'>
-            <div className="card-body border border-gray-400 bg-base-100 rounded-2xl shadow-2xl max-w-sm w-full">
+            <div className="card-body bg-base-300 rounded-2xl shadow-[0_0px_15px_20px_rgba(80,247,255,0.05),0_0px_5px_5px_rgba(202,235,102,0.1)] max-w-sm w-full">
                 <h1 className='text-4xl font-bold'>Create an account</h1>
                 <p className="text-lg font-semibold">Register withe Profast</p>
                 <form onSubmit={handleSubmit(onSubmit)}>
@@ -69,8 +73,12 @@ const Register = () => {
                             <p className="text-red-500" dangerouslySetInnerHTML={{ __html: errors?.password?.message.replace(/ - /g, '  <br/> -- ') }} />
                         }
 
-                        <div><a className="link link-hover">Forgot password?</a></div>
-                        <button className="btn btn-neutral mt-4">Register</button>
+                        <div>
+                            <p className="">Already have an account? go to
+                                <Link className='btn btn-link text-blue-400' to={`/login`}>Login</Link>
+                            </p>
+                        </div>
+                        <button className="btn btn-primary text-black mt-4">Register</button>
                     </fieldset>
                 </form>
             </div>
