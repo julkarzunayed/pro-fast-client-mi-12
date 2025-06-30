@@ -7,6 +7,7 @@ const NavBar = () => {
     const { user, userLogout } = useAuth()
     const navList = <>
         <li><NavLink to='/'>Home</NavLink></li>
+        <li><NavLink to='/coverage'>Coverage</NavLink></li>
         <li><NavLink to='/about'>About</NavLink></li>
     </>
 
