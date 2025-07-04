@@ -6,6 +6,8 @@ import Login from "../pages/Authentication/Login/Login";
 import Register from "../pages/Authentication/Register/Register";
 import Error from "../pages/Error/Error";
 import CoveragePage from "../pages/Coverage/CoveragePage";
+import SendParcel from "../pages/SendParcel/SendParcel";
+import PrivetRouter from "../routers/privetRouter";
 
 export const router = createBrowserRouter([
     {
@@ -20,6 +22,13 @@ export const router = createBrowserRouter([
                 path: 'coverage',
                 loader: () => fetch(`./data/warehouses.json`) ,
                 Component: CoveragePage
+            },
+            {
+                path: 'sendParcel',
+                element: <PrivetRouter>
+                    <SendParcel/>
+                </PrivetRouter>,
+                // Component: SendParcel,
             }
         ]
     },

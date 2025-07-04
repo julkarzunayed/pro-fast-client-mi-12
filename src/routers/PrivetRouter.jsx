@@ -1,12 +1,13 @@
 import React from 'react';
 import useAuth from '../hooks/useAuth';
 import { Navigate } from 'react-router';
+import Loading from '../pages/Loading/Loading';
 
 const PrivetRouter = ({ children }) => {
     const { user, loading } = useAuth();
 
     if(loading){
-        return <Loader></Loader>
+        return <Loading></Loading>
     }
 
     if (!user) {

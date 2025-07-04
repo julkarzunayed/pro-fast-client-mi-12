@@ -5,10 +5,10 @@ import 'leaflet/dist/leaflet.css';  // Don't forget to import Leaflet's CSS!
 
 // Fix for default marker icon issues with Webpack (common with react-leaflet)
 import L from 'leaflet';
-import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png';
+// import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png';
 import iconUrl from 'leaflet/dist/images/marker-icon.png';
 import shadowUrl from 'leaflet/dist/images/marker-shadow.png';
-import icon from '../../assets/bookingIcon.png'
+// import icon from '../../assets/bookingIcon.png'
 import { useLoaderData } from 'react-router';
 
 // L.Icon.Default.mergeOptions({
