@@ -8,6 +8,11 @@ const NavBar = () => {
     const navList = <>
         <li><NavLink to='/'>Home</NavLink></li>
         <li><NavLink to='/sendParcel'>Send a Parcel</NavLink></li>
+        {
+            user && <>
+                <li><NavLink to='/dashboard'>Dashboard</NavLink></li>
+            </>
+        }
         <li><NavLink to='/coverage'>Coverage</NavLink></li>
         <li><NavLink to='/about'>About</NavLink></li>
     </>
@@ -46,13 +51,13 @@ const NavBar = () => {
             <div className="navbar-end">
                 {
                     user ?
-                    <button onClick={handleLogout} className='btn btn-primary text-black'>
-                        Logout
-                    </button>
-                    :
-                    <Link to={`/login`} className='btn btn-primary text-black'>
-                        Login
-                    </Link>
+                        <button onClick={handleLogout} className='btn btn-primary text-black'>
+                            Logout
+                        </button>
+                        :
+                        <Link to={`/login`} className='btn btn-primary text-black'>
+                            Login
+                        </Link>
                 }
             </div>
         </div>

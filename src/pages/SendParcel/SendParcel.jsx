@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast, ToastContainer } from "react-toastify";
 import Swal from "sweetalert2";
 import useAuth from "../../hooks/useAuth";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 
 const regions = [
@@ -110,7 +110,8 @@ const generateTrackingID = () => {
 };
 
 const SendParcel = () => {
-  const {user} = useAuth()
+  const { user } = useAuth();
+  const axiosSecure = useAxiosSecure();
   const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm();
   const [senderDistricts, setSenderDistricts] = useState([]);
   const [receiverDistricts, setReceiverDistricts] = useState([]);
@@ -128,11 +129,11 @@ const SendParcel = () => {
     }
   };
 
- 
+
   const onSubmit = (data) => {
     const weight = parseFloat(data.weight) || 0;
     const sameCity = data.senderDistrict === data.receiverDistrict;
-    
+
     console.log("Form Data:", data);
 
     let baseCost = 0;
@@ -201,6 +202,23 @@ const SendParcel = () => {
         };
 
         console.log("Ready for payment:", parcelData);
+
+        axiosSecure.post('/parcels', parcelData)
+          .then(res => {
+            console.log(res.data)
+            if (res.data.insertedId) {
+              Swal.fire({
+                title: "Redirecting...",
+                text: "Proceeding to payment gateway.",
+                icon: "success",
+                timer: 1500,
+                showConfirmButton: false,
+              });
+            }
+          })
+          .catch(err => {
+            console.log(err)
+          })
 
         // axiosSecure.post('/parcels', parcelData)
         //   .then(res => {
@@ -480,7 +498,6 @@ const SendParcel = () => {
           </button>
         </div>
       </form>
-      <ToastContainer />
     </div>
   );
 };
