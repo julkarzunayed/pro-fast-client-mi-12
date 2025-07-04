@@ -11,6 +11,7 @@
   --color-primary: #CAEB66;
   --color-secondary: #03373D;
   --color-secondary-content: #03373D;
+  --color-tertiary-content: #4B5563;
 }
 @plugin "daisyui/theme" {
   name: "dark";
@@ -18,6 +19,7 @@
   --color-primary: #CAEB66;
   --color-secondary: #03373D;
   --color-secondary-content: white;
+  --color-tertiary-content: #D1D5DB;
 }
 
 
