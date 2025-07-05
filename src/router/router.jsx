@@ -10,6 +10,7 @@ import SendParcel from "../pages/SendParcel/SendParcel";
 import PrivetRouter from "../routers/privetRouter";
 import DashboardLayout from "../layouts/DashboardLayout/DashboardLayout";
 import MyParcels from "../pages/Dashboard/MyParcels/MyParcels";
+import Payment from "../pages/Dashboard/Payment/Payment";
 
 export const router = createBrowserRouter([
     {
@@ -60,6 +61,11 @@ export const router = createBrowserRouter([
             {
                 path: 'myParcels',
                 Component: MyParcels
+            },
+            {
+                path: 'payment/:parcelId',
+                loader: ({params}) => fetch(`http://localhost:5000/parcels?parcelId=${params.parcelId}`),
+                Component: Payment
             }
         ]
     },

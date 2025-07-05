@@ -5,6 +5,7 @@ import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import useAuth from '../../../hooks/useAuth';
 import { FaEye, FaDollarSign, FaTrashAlt } from 'react-icons/fa'; // Changed FaTrash to FaTrashAlt for a slightly different icon
 import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router';
 
 // import withReactContent from 'sweetalert2-react-content'; // Optional: for more complex React content in alerts
 
@@ -13,6 +14,7 @@ const MySwal = Swal; // Initialize SweetAlert2 for React content
 const MyParcels = () => {
     const { user } = useAuth()
     const axiosSecure = useAxiosSecure();
+    const navigate  = useNavigate()
     const { data: parcels = [], refetch } = useQuery({
         queryKey: ['myParcels', user.email],
         queryFn: async () => {
@@ -30,7 +32,7 @@ const MyParcels = () => {
 
     // Function to handle the 'Pay' button click
     const handlePay = (parcel) => {
-        alert(`Initiating payment for Parcel: ${parcel.tracking_id} (Cost: ${parcel.cost.$numberInt} BDT)`);
+        navigate(`/dashboard/payment/${parcel._id}`)
         // In a real application, you'd integrate with a payment gateway.
     };
 
@@ -90,7 +92,6 @@ const MyParcels = () => {
             </div>
         );
     }
-    console.log("data from ", parcels)
 
     return (
         <div className="overflow-x-auto p-4">
@@ -121,9 +122,9 @@ const MyParcels = () => {
                                 </span>
                             </td>
                             {/* Type */}
-                            <td className="py-3 px-6 text-left">
-                                <div className="flex items-center">
-                                    <span className={`badge ${parcel.type === 'document' ? 'badge-info' : 'badge-secondary'} badge-md text-white`}>
+                            <td className="py-3 px-6 text-left flex items-center">
+                                <div className={`badge ${parcel.type === 'document' ? 'badge-info' : 'badge-secondary'} py-5`}>
+                                    <span className={` badge-md text-white`}>
                                         {parcel.type}
                                     </span>
                                 </div>
