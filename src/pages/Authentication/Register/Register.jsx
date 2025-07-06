@@ -1,12 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import useAuth from '../../../hooks/useAuth';
 import { Link, useLocation, useNavigate } from 'react-router';
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const Register = () => {
-    const { createUser } = useAuth();
+    const { createUser, updateUserProfile } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
+    const [profilePic, setProfilePic] = useState('');
+
     const {
         register,
         handleSubmit,
@@ -18,12 +22,46 @@ const Register = () => {
             .then(res => {
                 // console.log(res.user)
                 res
-                navigate(location.state || '/')
+                const profileInfo = {
+                    displayName: data.name,
+                    photoURL: profilePic,
+                };
+                // update user info from firebase
+                updateUserProfile(profileInfo)
+                    .then(() => {
+
+                    }).catch(error => {
+                        console.log(error)
+                    }); // -- profile update end
+
+                navigate(location.state || '/');
+                console.log(profileInfo)
             })
             .catch(err => {
                 console.error(err)
             })
-        console.log(data, createUser)
+    }
+    const onImageFileSelect = async (e) => {
+        const image = e.target.files[0];
+        console.log(image)
+        const formData = new FormData();
+        formData.append('image', image);
+
+        const url = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_imagebb_key}`
+
+        const imageBBRes = await axios.post(url, formData)
+        if (imageBBRes.data.status === 200) {
+            setProfilePic(imageBBRes.data.data.url);
+        }
+        else if (!imageBBRes.data.status === 200) {
+            Swal.fire({
+                icon: "error",
+                title: "Image upload failed",
+                text: 'There might some error while uploading image',
+                showConfirmButton: true,
+            });
+        }
+
     }
     return (
         <div className=' w-full flex items-center justify-center'>
@@ -32,8 +70,34 @@ const Register = () => {
                 <p className="text-lg font-semibold">Register withe Profast</p>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <fieldset className="fieldset">
-                        <label className="label">Email</label>
+
+                        {/* Name field */}
+                        <label className="label">Your Name</label>
+                        <input
+                            type="text"
+                            {
+                            ...register("name", {
+                                required: 'Name is required',
+
+                            })
+                            }
+                            className="input w-full"
+                            placeholder="Email" />
+                        {
+                            errors?.name?.type === 'required' &&
+                            <p role='alert' className="text-red-500 ">Name is required</p>
+                        }
+
+                        {/* Photo */}
+                        <label className="label">Photo</label>
+                        <input
+                            onChange={onImageFileSelect}
+                            type="file"
+                            className="file-input file-input-success" />
+
+
                         {/* Email */}
+                        <label className="label">Email</label>
                         <input
                             type="email"
                             {

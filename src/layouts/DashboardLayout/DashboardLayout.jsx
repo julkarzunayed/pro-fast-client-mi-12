@@ -1,9 +1,11 @@
 import React from 'react';
 import { NavLink, Outlet } from 'react-router';
 import ProFastLogo from '../../components/ProFastLogo/ProFastLogo';
-import { FaHome,FaBoxOpen, FaCreditCard, FaSearchLocation, FaUserEdit } from 'react-icons/fa'; // Updated imports
+import { FaHome, FaBoxOpen, FaCreditCard, FaSearchLocation, FaUserEdit } from 'react-icons/fa'; // Updated imports
+import useAuth from '../../hooks/useAuth';
 
 const DashboardLayout = () => {
+    const { user } = useAuth();
     return (
         <div className="drawer lg:drawer-open">
             <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
@@ -42,6 +44,20 @@ const DashboardLayout = () => {
                 <ul className="menu bg-base-200 text-base-content min-h-full w-80 p-4">
                     {/* Sidebar content here */}
                     <li><ProFastLogo /></li>
+                    <li>
+                        <div className="">
+                            <div
+                                style={{
+                                    backgroundImage: `url(${user.photoURL})`,
+                                }}
+                                className={`bg-[url(${user.photoURL})] h-12 w-12 bg-cover bg-center bg-no-repeat rounded-full`}>
+                                {/* <img src={user.photoURL} alt="" /> */}
+                            </div>
+                            <h3 className="font-bold text-xl">
+                                {user.displayName}
+                            </h3>
+                        </div>
+                    </li>
                     <li>
                         <NavLink to={'/dashboard'}>
                             <FaHome className="inline-block mr-2" /> Home

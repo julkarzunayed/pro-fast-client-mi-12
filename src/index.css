@@ -10,6 +10,7 @@
   default: true;
   --color-primary: #CAEB66;
   --color-secondary: #03373D;
+  --color-primary-content: #4B5563;
   --color-secondary-content: #03373D;
   --color-tertiary-content: #4B5563;
 }
@@ -18,6 +19,7 @@
   /* default: true; */
   --color-primary: #CAEB66;
   --color-secondary: #03373D;
+  --color-primary-content: #D1D5DB;
   --color-secondary-content: white;
   --color-tertiary-content: #D1D5DB;
 }

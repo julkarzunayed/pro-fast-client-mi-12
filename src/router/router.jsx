@@ -11,6 +11,7 @@ import PrivetRouter from "../routers/privetRouter";
 import DashboardLayout from "../layouts/DashboardLayout/DashboardLayout";
 import MyParcels from "../pages/Dashboard/MyParcels/MyParcels";
 import Payment from "../pages/Dashboard/Payment/Payment";
+import PaymentHistory from "../pages/Dashboard/PaymentHistory/PaymentHistory";
 
 export const router = createBrowserRouter([
     {
@@ -23,13 +24,13 @@ export const router = createBrowserRouter([
             },
             {
                 path: 'coverage',
-                loader: () => fetch(`./data/warehouses.json`) ,
+                loader: () => fetch(`./data/warehouses.json`),
                 Component: CoveragePage
             },
             {
                 path: 'sendParcel',
                 element: <PrivetRouter>
-                    <SendParcel/>
+                    <SendParcel />
                 </PrivetRouter>,
                 // Component: SendParcel,
             }
@@ -48,14 +49,14 @@ export const router = createBrowserRouter([
                 Component: Register,
             },
             {
-                
+
             }
         ]
     },
     {
         path: 'dashboard',
         element: <PrivetRouter>
-            <DashboardLayout/>
+            <DashboardLayout />
         </PrivetRouter>,
         children: [
             {
@@ -64,8 +65,12 @@ export const router = createBrowserRouter([
             },
             {
                 path: 'payment/:parcelId',
-                loader: ({params}) => fetch(`http://localhost:5000/parcels?parcelId=${params.parcelId}`),
+                loader: ({ params }) => fetch(`http://localhost:5000/parcels?parcelId=${params.parcelId}`),
                 Component: Payment
+            },
+            {
+                path: 'paymentHistory',
+                Component: PaymentHistory,
             }
         ]
     },
@@ -73,5 +78,5 @@ export const router = createBrowserRouter([
         path: '*',
         Component: Error,
     }
-    
+
 ]);

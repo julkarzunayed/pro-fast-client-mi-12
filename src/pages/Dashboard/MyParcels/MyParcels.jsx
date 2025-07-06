@@ -97,14 +97,14 @@ const MyParcels = () => {
         <div className="overflow-x-auto p-4">
             <table className="table text-tertiary-content w-full border-separate border-spacing-y-2">
                 {/* Table Head */}
-                <thead>
+                <thead className=''>
                     <tr className="bg-base-200  text-sm uppercase leading-normal">
-                        <th className="py-3 px-6 text-left rounded-l-lg">Parcel Name</th>
-                        <th className="py-3 px-6 text-left rounded-l-lg">Type</th>
+                        <th className="py-3 px-6 text-left ">Parcel Name</th>
+                        <th className="py-3 px-6 text-left ">Type</th>
                         <th className="py-3 px-6 text-left">Created At</th>
                         <th className="py-3 px-6 text-right">Cost (BDT)</th>
                         <th className="py-3 px-6 text-center">Payment Status</th>
-                        <th className="py-3 px-6 text-center rounded-r-lg">Actions</th>
+                        <th className="py-3 px-6 text-center ">Actions</th>
                     </tr>
                 </thead>
                 {/* Table Body */}
