@@ -1,10 +1,11 @@
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import { useQuery } from '@tanstack/react-query';
 import React, { useState } from 'react';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import Loading from '../../Loading/Loading';
 import useAuth from '../../../hooks/useAuth';
+import Swal from 'sweetalert2';
 
 const PaymentForm = () => {
     const stripe = useStripe();
@@ -12,9 +13,8 @@ const PaymentForm = () => {
     const elements = useElements();
     const [cardError, setCardError] = useState('');
     const { parcelId } = useParams();
+    const navigate = useNavigate();
     const axiosSecure = useAxiosSecure()
-    console.log(parcelId)
-    // const [parcelData] = useLoaderData();
 
     const { data = [], error, isLoading } = useQuery({
         queryKey: ['parcels', parcelId],
@@ -34,7 +34,6 @@ const PaymentForm = () => {
     }
     const amount = parcelData?.cost
     const amountInCents = parseInt(amount) * 100;
-    console.log(amountInCents)
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -48,7 +47,7 @@ const PaymentForm = () => {
             return;
         }
 
-        const { error : paymentError, paymentMethod } = await stripe.createPaymentMethod({
+        const { error: paymentError, paymentMethod } = await stripe.createPaymentMethod({
             type: 'card',
             card,
         })
@@ -89,6 +88,30 @@ const PaymentForm = () => {
             if (result.paymentIntent.status === 'succeeded') {
                 console.log('Payment succeeded')
                 console.log(result)
+                //step-4 make parcel paid also payment history
+                const paymentData = {
+                    parcelId,
+                    email: user.email,
+                    amount,
+                    transactionId: result.paymentIntent.id,
+                    paymentMethod: result.paymentIntent.payment_method_types,
+                }
+
+                const paymentRes = await axiosSecure.patch(`/parcels`, paymentData);
+                console.log(paymentRes.data);
+                if (paymentRes.data.insertedId) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Payment Succeeded",
+                        html: `
+                        Transaction ID: <b>${result.paymentIntent.id}</b>
+                        
+                        `,
+                        text: paymentRes.data.message,
+                        showConfirmButton: true,
+                    });
+                    navigate('/dashboard/myParcels')
+                }
             }
         }
 
