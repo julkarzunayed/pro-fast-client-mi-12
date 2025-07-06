@@ -4,12 +4,15 @@ import useAuth from '../../../hooks/useAuth';
 import { Link, useLocation, useNavigate } from 'react-router';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import useAxios from '../../../hooks/useAxios';
+import SocialLogin from '../../shared/SocialLogin/SocialLogin';
 
 const Register = () => {
     const { createUser, updateUserProfile } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
     const [profilePic, setProfilePic] = useState('');
+    const axiosInstance = useAxios()
 
     const {
         register,
@@ -19,9 +22,18 @@ const Register = () => {
 
     const onSubmit = data => {
         createUser(data.email, data.password)
-            .then(res => {
+            .then(async (res) => {
                 // console.log(res.user)
                 res
+                const userInfo = {
+                    email: data.email,
+                    role: 'user',
+                    created_at: new Date().toISOString(),
+                    last_log_in: new Date().toISOString(),
+                };
+                const userRes = await axiosInstance.post('/users', userInfo);
+                console.log(userRes.data)
+
                 const profileInfo = {
                     displayName: data.name,
                     photoURL: profilePic,
@@ -145,6 +157,7 @@ const Register = () => {
                         <button className="btn btn-primary text-black mt-4">Register</button>
                     </fieldset>
                 </form>
+                <SocialLogin></SocialLogin>
             </div>
         </div>
     );

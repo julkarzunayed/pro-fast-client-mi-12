@@ -2,6 +2,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useLocation, useNavigate } from 'react-router';
 import useAuth from '../../../hooks/useAuth';
+import SocialLogin from '../../shared/SocialLogin/SocialLogin';
 
 const Login = () => {
     const { signInUser } = useAuth();
@@ -109,6 +110,7 @@ const Login = () => {
                         <button className="btn btn-primary text-black mt-4">Login</button>
                     </fieldset>
                 </form>
+                <SocialLogin></SocialLogin>
             </div>
         </div>
     );
