@@ -12,6 +12,7 @@ import DashboardLayout from "../layouts/DashboardLayout/DashboardLayout";
 import MyParcels from "../pages/Dashboard/MyParcels/MyParcels";
 import Payment from "../pages/Dashboard/Payment/Payment";
 import PaymentHistory from "../pages/Dashboard/PaymentHistory/PaymentHistory";
+import BeARider from "../pages/BeARider/BeARider";
 
 export const router = createBrowserRouter([
     {
@@ -33,6 +34,12 @@ export const router = createBrowserRouter([
                     <SendParcel />
                 </PrivetRouter>,
                 // Component: SendParcel,
+            },
+            {
+                path: 'beARider',
+                element: <PrivetRouter>
+                    <BeARider />
+                </PrivetRouter>
             }
         ]
     },
@@ -48,9 +55,7 @@ export const router = createBrowserRouter([
                 path: 'register',
                 Component: Register,
             },
-            {
 
-            }
         ]
     },
     {
