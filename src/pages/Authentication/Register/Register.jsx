@@ -46,7 +46,7 @@ const Register = () => {
                         console.log(error)
                     }); // -- profile update end
 
-                navigate(location.state || '/');
+                navigate(location.state?.from || '/');
                 console.log(profileInfo)
             })
             .catch(err => {

@@ -1,8 +1,51 @@
 import React from 'react';
+import useAuth from '../../../hooks/useAuth';
+import { useLocation, useNavigate } from 'react-router';
+import useAxios from '../../../hooks/useAxios';
+import Swal from 'sweetalert2';
 
 const SocialLogin = () => {
+    const { signinWithGoogle } = useAuth();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state?.from || '/'
+
+    const axiosInstance = useAxios();
+
+    console.log(location)
     const handleGoogleLogin = async () => {
-        console.log('google login')
+        signinWithGoogle()
+            .then(async (result) => {
+                const user = result.user;
+
+                //Create user in the DB
+                const userInfo = {
+                    email: user.email,
+                    role: 'user',
+                    created_at: new Date().toISOString(),
+                    last_log_in: new Date().toISOString(),
+                };
+                const userRes = await axiosInstance.post('/users', userInfo);
+                console.log(userRes.data)
+                if (userRes.data.insertedId) {
+                    userRes
+                    Swal.fire({
+                        title: "Welcome to <strong>ProFast</strong>",
+                        icon: "success",
+                        timer: 1700
+                    });
+                } else {
+                    Swal.fire({
+                        title: `Welcome back <strong>${user.displayName} </strong>`,
+                        icon: "success",
+                        timer: 1700
+                    });
+                }
+
+                navigate(from)
+            }).catch(err => {
+                console.log(err)
+            })
     }
     return (
         <div>
