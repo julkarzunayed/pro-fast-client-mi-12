@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink, Outlet } from 'react-router';
 import ProFastLogo from '../../components/ProFastLogo/ProFastLogo';
-import { FaHome, FaBoxOpen, FaCreditCard, FaSearchLocation, FaUserEdit } from 'react-icons/fa'; // Updated imports
+import { FaHome, FaBoxOpen, FaCreditCard, FaSearchLocation, FaUserEdit, FaHourglassHalf, FaCheckCircle, FaUserClock, FaMotorcycle } from 'react-icons/fa'; // Updated imports
 import useAuth from '../../hooks/useAuth';
 
 const DashboardLayout = () => {
@@ -76,6 +76,16 @@ const DashboardLayout = () => {
                     <li>
                         <NavLink to={'/dashboard/track'}>
                             <FaSearchLocation className="inline-block mr-2" /> Track a Parcel {/* Changed to FaLocationArrow */}
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink to={'/dashboard/pendingRiders'}>
+                            <FaUserClock className="inline-block mr-2" /> Pending Riders
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink to={'/dashboard/activeRiders'}>
+                            <FaMotorcycle className="inline-block mr-2" /> Active Riders
                         </NavLink>
                     </li>
                     <li>
