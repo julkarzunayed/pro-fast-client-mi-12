@@ -4,9 +4,11 @@ import ProFastLogo from '../../components/ProFastLogo/ProFastLogo';
 import { FaHome, FaBoxOpen, FaCreditCard, FaSearchLocation, FaUserEdit, FaHourglassHalf, FaCheckCircle, FaUserClock, FaMotorcycle } from 'react-icons/fa'; // Updated imports
 import useAuth from '../../hooks/useAuth';
 import { MdAdminPanelSettings } from 'react-icons/md';
+import useUserRole from '../../hooks/useUserRole';
 
 const DashboardLayout = () => {
     const { user } = useAuth();
+    const { role, isRoleLoading } = useUserRole();
     return (
         <div className="drawer lg:drawer-open">
             <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
@@ -79,22 +81,27 @@ const DashboardLayout = () => {
                             <FaSearchLocation className="inline-block mr-2" /> Track a Parcel {/* Changed to FaLocationArrow */}
                         </NavLink>
                     </li>
-                    <li>
-                        <NavLink to={'/dashboard/pendingRiders'}>
-                            <FaUserClock className="inline-block mr-2" /> Pending Riders
-                        </NavLink>
-                    </li>
-                    <li>
-                        <NavLink to={'/dashboard/activeRiders'}>
-                            <FaMotorcycle className="inline-block mr-2" /> Active Riders
-                        </NavLink>
-                    </li>
-                    <li>
-                        <NavLink to={'/dashboard/makeAdmin'}>
-                            <MdAdminPanelSettings  className="inline-block mr-2" /> 
-                            Make Admin
-                        </NavLink>
-                    </li>
+                    {/* Admin links  */}
+                    {
+                       !isRoleLoading && role === 'admin' && <>
+                            <li>
+                                <NavLink to={'/dashboard/pendingRiders'}>
+                                    <FaUserClock className="inline-block mr-2" /> Pending Riders
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink to={'/dashboard/activeRiders'}>
+                                    <FaMotorcycle className="inline-block mr-2" /> Active Riders
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink to={'/dashboard/makeAdmin'}>
+                                    <MdAdminPanelSettings className="inline-block mr-2" />
+                                    Make Admin
+                                </NavLink>
+                            </li>
+                        </>
+                    }
                     <li>
                         <NavLink to={'/dashboard/updateProfile'}>
                             <FaUserEdit className="inline-block mr-2" /> Update Profile
