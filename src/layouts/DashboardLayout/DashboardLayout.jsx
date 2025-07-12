@@ -3,6 +3,7 @@ import { NavLink, Outlet } from 'react-router';
 import ProFastLogo from '../../components/ProFastLogo/ProFastLogo';
 import { FaHome, FaBoxOpen, FaCreditCard, FaSearchLocation, FaUserEdit, FaHourglassHalf, FaCheckCircle, FaUserClock, FaMotorcycle } from 'react-icons/fa'; // Updated imports
 import useAuth from '../../hooks/useAuth';
+import { MdAdminPanelSettings } from 'react-icons/md';
 
 const DashboardLayout = () => {
     const { user } = useAuth();
@@ -86,6 +87,12 @@ const DashboardLayout = () => {
                     <li>
                         <NavLink to={'/dashboard/activeRiders'}>
                             <FaMotorcycle className="inline-block mr-2" /> Active Riders
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink to={'/dashboard/makeAdmin'}>
+                            <MdAdminPanelSettings  className="inline-block mr-2" /> 
+                            Make Admin
                         </NavLink>
                     </li>
                     <li>

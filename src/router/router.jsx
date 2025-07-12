@@ -14,6 +14,8 @@ import Payment from "../pages/Dashboard/Payment/Payment";
 import PaymentHistory from "../pages/Dashboard/PaymentHistory/PaymentHistory";
 import BeARider from "../pages/BeARider/BeARider";
 import PendingRiders from "../pages/Dashboard/PendingRiders/PendingRiders";
+import ActiveRiders from "../pages/Dashboard/ActiveRiders/ActiveRiders";
+import MakeAdmin from "../pages/Dashboard/MakeAdmin/MakeAdmin";
 
 export const router = createBrowserRouter([
     {
@@ -80,6 +82,14 @@ export const router = createBrowserRouter([
             {
                 path: 'pendingRiders',
                 Component: PendingRiders
+            },
+            {
+                path: 'activeRiders',
+                Component: ActiveRiders,
+            },
+            {
+                path: 'makeAdmin',
+                Component: MakeAdmin,
             }
         ]
     },
