@@ -5,19 +5,10 @@ import { HiOutlineMail } from "react-icons/hi";
 import { MdContactPhone } from "react-icons/md";
 import { format } from 'date-fns'; // For date formatting
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
+import Loading from '../../Loading/Loading';
 
 // Assuming useAxiosSecure and Swal are correctly imported from your project
 
-
-
-// Dummy Swal for demonstration if not available
-const Swal = {
-  fire: ({ title, text, icon }) => {
-    console.log(`Swal: ${title} - ${text} (${icon})`);
-    // In a real app, this would show an actual SweetAlert modal
-    return Promise.resolve({ isConfirmed: true }); // Simulate confirmation
-  }
-};
 
 
 const ActiveRiders = () => {
@@ -68,7 +59,7 @@ const ActiveRiders = () => {
   };
 
   if (isLoading) {
-    return <div className="text-center py-10 text-lg ">Loading active riders...</div>;
+    return <Loading></Loading>;
   }
 
   if (isError) {

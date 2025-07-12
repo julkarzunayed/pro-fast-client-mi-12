@@ -5,6 +5,7 @@ import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import Swal from 'sweetalert2';
 import { HiOutlineMail } from "react-icons/hi";
 import { MdContactPhone } from "react-icons/md";
+import Loading from '../../Loading/Loading';
 
 const PendingRiders = () => {
     const axiosSecure = useAxiosSecure();
@@ -32,7 +33,8 @@ const PendingRiders = () => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 const result = await axiosSecure.patch(`/riders/${rider._id}`, {
-                    status: 'active'
+                    status: 'active',
+                    email: rider.email
                 })
                 console.log(result.data)
                 if (result.data.modifiedCount) {
@@ -67,7 +69,8 @@ const PendingRiders = () => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 const result = await axiosSecure.patch(`/riders/${rider._id}`, {
-                    status: 'reject'
+                    status: 'reject',
+                    email: rider.email
                 })
                 console.log(result.data)
                 if (result.data.modifiedCount) {
@@ -90,7 +93,7 @@ const PendingRiders = () => {
     };
 
     if (isLoading) {
-        return <div className="text-center py-10 text-lg ">Loading pending riders...</div>;
+        return <Loading></Loading>
     }
 
     if (isError) {
