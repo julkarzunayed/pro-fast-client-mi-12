@@ -63,6 +63,7 @@ export const router = createBrowserRouter([
 
         ]
     },
+    //  DashBoard
     {
         path: 'dashboard',
         element: <PrivetRouter>
@@ -83,11 +84,15 @@ export const router = createBrowserRouter([
             },
             {
                 path: 'pendingRiders',
-                Component: PendingRiders
+                element: <AdminRouter>
+                    <PendingRiders />
+                </AdminRouter>
             },
             {
                 path: 'activeRiders',
-                Component: ActiveRiders,
+                element: <AdminRouter>
+                    <ActiveRiders />
+                </AdminRouter>
             },
             {
                 path: 'makeAdmin',

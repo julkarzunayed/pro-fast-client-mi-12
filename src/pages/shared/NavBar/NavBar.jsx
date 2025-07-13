@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, NavLink } from 'react-router';
 import ProFastLogo from '../../../components/ProFastLogo/ProFastLogo';
 import useAuth from '../../../hooks/useAuth';
+import Swal from 'sweetalert2';
 
 const NavBar = () => {
     const { user, userLogout } = useAuth()
@@ -19,13 +20,30 @@ const NavBar = () => {
     </>
 
     const handleLogout = () => {
-        userLogout()
-            .then(() => {
-                alert('Sign out successful')
-            })
-            .catch(err => {
-                console.log(err)
-            })
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You want to log Out!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, Sign Out!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                userLogout()
+                    .then(() => {
+                        Swal.fire({
+                            title: "Signed Out!",
+                            text: "You have successfully signed out.",
+                            icon: "success"
+                        });
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+
+            }
+        });
     }
     return (
         <div className="navbar bg-base-100 shadow-sm">
