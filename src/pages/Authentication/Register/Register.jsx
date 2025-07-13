@@ -25,6 +25,8 @@ const Register = () => {
             .then(async (res) => {
                 // console.log(res.user)
                 res
+
+                //Create user in the DB
                 const userInfo = {
                     email: data.email,
                     role: 'user',
@@ -51,6 +53,14 @@ const Register = () => {
             })
             .catch(err => {
                 console.error(err)
+                if (err.code === 'auth/email-already-in-use') {
+                    Swal.fire({
+                        title: "Email already registered!",
+                        icon: "error",
+                        
+                    });
+                }
+
             })
     }
     const onImageFileSelect = async (e) => {
