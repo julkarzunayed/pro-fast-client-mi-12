@@ -8,10 +8,12 @@ import { ImCheckmark } from "react-icons/im";
 import LoadingMini from '../../Loading/LoadingMini';
 // In your main App.js or index.js
 import 'sweetalert2/dist/sweetalert2.min.css';
+import useAuth from '../../../hooks/useAuth';
 
 
-const RiderAssignmentModal = ({ parcel, onClose }) => {
+const RiderAssignmentModal = ({ parcel, onClose, refetch }) => {
     console.log(parcel)
+    const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
     const queryClient = useQueryClient();
 
@@ -33,14 +35,18 @@ const RiderAssignmentModal = ({ parcel, onClose }) => {
     const assignRiderMutation = useMutation({
         mutationFn: async ({ parcelId, riderId, riderName }) => {
             const response = await axiosSecure.patch(`/parcels/${parcelId}/assign`, {
-                delivery_status: "in_transit",
+                delivery_status: "rider_assigned",
+                assign_rider_email: user.emil,
                 assigned_rider_id: riderId,
                 assigned_rider_name: riderName,
             });
+            console.log(response)
             return response.data;
         },
         onSuccess: (data) => {
-            if (data.modifiedCount) {
+            refetch()
+            // console.log(data)
+            if (data.updateParcel.modifiedCount) {
                 Swal.fire({
                     title: "Assigned!",
                     text: "Rider assigned successfully.",
@@ -96,9 +102,10 @@ const RiderAssignmentModal = ({ parcel, onClose }) => {
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                assignRiderMutation.mutate({ // Call the mutation
+                //Call the mutation
+                assignRiderMutation.mutate({
                     parcelId: parcel._id,
-                    riderId:  selectedRider._id,
+                    riderId: selectedRider._id,
                     riderName: selectedRider.name
                 });
             }
@@ -114,7 +121,7 @@ const RiderAssignmentModal = ({ parcel, onClose }) => {
         <dialog
             id="assign_rider_modal"
             className="modal z-20"
-            style={{zIndex: 40}}>
+            style={{ zIndex: 40 }}>
             <div className="modal-box w-11/12 max-w-2xl z-20">
                 <h3 className="font-bold text-lg text-center mb-4">Assign Rider to Parcel: {parcel?.parcelName}</h3>
                 <p className="text-primary-content text-center mb-6">Sender's District: <span className="font-semibold text-blue-600">{parcel?.senderDistrict || 'N/A'}</span></p>

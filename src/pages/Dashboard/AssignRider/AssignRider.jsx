@@ -16,7 +16,7 @@ const AssignRider = () => {
 
     const [selectedParcel, setSelectedParcel] = useState(null); // State to hold the parcel for assignment
 
-    const { data: parcels = [], isLoading, isError, error } = useQuery({
+    const { data: parcels = [], isLoading, isError, error, refetch } = useQuery({
         queryKey: ['allParcels'],
         queryFn: async () => {
             // Replace this with your actual axios call to your backend
@@ -66,11 +66,6 @@ const AssignRider = () => {
             document.getElementById('assign_rider_modal').close(); // Close the modal
         } catch (err) {
             console.error("Error handling rider assignment callback:", err);
-            Swal.fire({
-                title: "Error!",
-                text: "An error occurred during assignment processing.",
-                icon: "error"
-            });
         }
     };
 
@@ -181,6 +176,7 @@ const AssignRider = () => {
             {/* Rider Assignment Modal */}
             {selectedParcel && ( // Only render modal if a parcel is selected
                 <RiderAssignmentModal
+                    refetch={refetch}
                     parcel={selectedParcel}
                     onClose={onRiderAssigned} // MARKED CHANGE: onRiderAssigned is now passed as onClose
                 />

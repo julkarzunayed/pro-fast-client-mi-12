@@ -10,7 +10,7 @@ const useUserRole = () => {
     const userEmail = user?.email; // Extract email from user object
 
     const {
-        data: roleData,
+        data = [],
         isLoading: isLoadingRole,
         isError: isErrorRole,
         error: roleError,
@@ -23,7 +23,7 @@ const useUserRole = () => {
                 throw new Error("User email not available to fetch role.");
             }
             // Make API call to your backend to get the user's role
-            const response = await axiosSecure.post(`/users/role`,{ email: userEmail});
+            const response = await axiosSecure.post(`/users/role`, { email: userEmail });
             return response.data; // Assuming your API returns { role: 'admin' }
         },
         // The query will only run if userEmail is available and not loading auth
@@ -38,10 +38,12 @@ const useUserRole = () => {
     });
 
     // Extract the role from roleData, default to 'user' or null if not found
-    const role = roleData?.role;
-
+    const role = data?.role;
+    const userId = data?._id;
+    // console.log(userId)
     return {
-        role : role || 'user',
+        role: role || 'user',
+        userId: userId,
         isRoleLoading: isLoadingAuth || isLoadingRole, // Overall loading state
         isRoleError: isErrorRole,
         error: roleError,

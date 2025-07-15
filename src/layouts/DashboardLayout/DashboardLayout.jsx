@@ -1,9 +1,9 @@
 import React from 'react';
 import { NavLink, Outlet } from 'react-router';
 import ProFastLogo from '../../components/ProFastLogo/ProFastLogo';
-import { FaHome, FaBoxOpen, FaCreditCard, FaSearchLocation, FaUserEdit, FaHourglassHalf, FaCheckCircle, FaUserClock, FaMotorcycle, FaClipboardList } from 'react-icons/fa'; // Updated imports
+import { FaHome, FaBoxOpen, FaCreditCard, FaSearchLocation, FaUserEdit, FaHourglassHalf, FaCheckCircle, FaUserClock, FaMotorcycle, FaClipboardList, FaTasks } from 'react-icons/fa'; // Updated imports
 import useAuth from '../../hooks/useAuth';
-import { MdAdminPanelSettings } from 'react-icons/md';
+import { MdAdminPanelSettings, MdPendingActions } from 'react-icons/md';
 import useUserRole from '../../hooks/useUserRole';
 
 const DashboardLayout = () => {
@@ -81,6 +81,17 @@ const DashboardLayout = () => {
                             <FaSearchLocation className="inline-block mr-2" /> Track a Parcel {/* Changed to FaLocationArrow */}
                         </NavLink>
                     </li>
+                    {/* Rider Links */}
+                    {
+                        !isRoleLoading && role === 'rider' && <>
+                            <li>
+                                <NavLink to={'/dashboard/riderPendingTasks'}>
+                                    <MdPendingActions className="inline-block mr-2" /> 
+                                    My Pending delivery
+                                </NavLink>
+                            </li>
+                        </>
+                    }
                     {/* Admin links  */}
                     {
                         !isRoleLoading && role === 'admin' && <>
