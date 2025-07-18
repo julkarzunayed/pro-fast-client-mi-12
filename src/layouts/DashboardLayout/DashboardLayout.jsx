@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink, Outlet } from 'react-router';
 import ProFastLogo from '../../components/ProFastLogo/ProFastLogo';
-import { FaHome, FaBoxOpen, FaCreditCard, FaSearchLocation, FaUserEdit, FaHourglassHalf, FaCheckCircle, FaUserClock, FaMotorcycle, FaClipboardList, FaTasks } from 'react-icons/fa'; // Updated imports
+import { FaHome, FaBoxOpen, FaCreditCard, FaSearchLocation, FaUserEdit, FaUserClock, FaMotorcycle, FaClipboardList, FaCheckSquare, FaDollarSign, FaWallet } from 'react-icons/fa'; // Updated imports
 import useAuth from '../../hooks/useAuth';
 import { MdAdminPanelSettings, MdPendingActions } from 'react-icons/md';
 import useUserRole from '../../hooks/useUserRole';
@@ -86,8 +86,18 @@ const DashboardLayout = () => {
                         !isRoleLoading && role === 'rider' && <>
                             <li>
                                 <NavLink to={'/dashboard/riderPendingTasks'}>
-                                    <MdPendingActions className="inline-block mr-2" /> 
+                                    <MdPendingActions className="inline-block mr-2" />
                                     My Pending delivery
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink to={'/dashboard/myDeliveredParcels'}>
+                                    <FaCheckSquare className="inline-block mr-2" /> My Delivered Parcels
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink to={'/dashboard/myTotalEarning'}>
+                                    <FaWallet className="inline-block mr-2" /> My Total Earning
                                 </NavLink>
                             </li>
                         </>

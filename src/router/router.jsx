@@ -21,6 +21,8 @@ import ForbiddenPage from "../pages/ForbiddenPage/ForbiddenPage";
 import AssignRider from "../pages/Dashboard/AssignRider/AssignRider";
 import RiderRouter from "../routers/RiderRouter";
 import PendingDelivery from "../pages/Dashboard/PendingDelivery/PendingDelivery";
+import MyDeliveredParcel from "../pages/Dashboard/MyDeliveredParcel/MyDeliveredParcel";
+import MyTotalEarning from "../pages/Dashboard/MyTotalEarning/MyTotalEarning";
 
 export const router = createBrowserRouter([
     {
@@ -115,6 +117,18 @@ export const router = createBrowserRouter([
                 path: 'riderPendingTasks',
                 element: <RiderRouter>
                     <PendingDelivery />
+                </RiderRouter>
+            },
+            {
+                path: 'myDeliveredParcels',
+                element: <RiderRouter>
+                    <MyDeliveredParcel />
+                </RiderRouter>
+            },
+            {
+                path: 'myTotalEarning',
+                element: <RiderRouter>
+                    <MyTotalEarning/>
                 </RiderRouter>
             }
         ]

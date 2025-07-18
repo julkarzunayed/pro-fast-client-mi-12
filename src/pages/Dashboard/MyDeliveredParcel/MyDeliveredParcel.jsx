@@ -1,137 +1,101 @@
-import React from 'react'; // useEffect is now directly imported
+import React from 'react';
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
-import { FaTruckLoading, FaCheckCircle, FaWarehouse, FaEye } from 'react-icons/fa'; // Icons for actions
+import { FaMoneyBillWave, FaEye } from 'react-icons/fa'; // Icons for actions
+import { format } from 'date-fns'; // For date formatting
 import Swal from 'sweetalert2'; // Explicitly import Swal
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import useUserRole from '../../../hooks/useUserRole';
 import LoadingMini from '../../Loading/LoadingMini';
-import { format } from 'date-fns';
-
-// Assuming useAuth and useAxiosSecure are correctly imported from your project
-// import useAuth from '../../../hooks/useAuth';
-// import useAxiosSecure from '../../../hooks/useAxiosSecure';
-
-// Dummy useAuth for demonstration
 
 
-// Dummy useAxiosSecure for demonstration
-// This dummy now handles GET for assigned parcels and PATCH for status updates
-// End of Dummy implementations
 
-const PendingDelivery = () => { // Renamed component
+const MyDeliveredParcel = () => {
     const axiosSecure = useAxiosSecure();
     const queryClient = useQueryClient();
     const { userId, isRoleLoading } = useUserRole()
-    console.log(userId)
+    const riderId = userId
+
     const {
         data: parcels = [],
         isLoading: isLoadingParcels,
         isError,
         error,
-        // refetch
     } = useQuery({
-        queryKey: ['riderAssignedParcels', userId], // Query key includes userId
+        queryKey: ['myDeliveredParcels', riderId], // Query key includes riderId
         queryFn: async () => {
-            if (!userId) {
+            if (!riderId) {
                 throw new Error("Rider ID not available.");
             }
-            const response = await axiosSecure.get(`/parcels/rider/${userId}/assigned`);
+            // MARKED CHANGE: API call to fetch delivered parcels for the rider
+            const response = await axiosSecure.get(`/parcels/rider/${riderId}/delivered`);
             return response.data;
         },
-        enabled: !!userId && !isRoleLoading, // Only run if userId is available and auth is not loading
+        enabled: !!riderId && !isRoleLoading, // Only run if riderId is available and auth is not loading
         staleTime: 5 * 60 * 1000,
     });
     console.log(parcels)
-    const updateParcelStatusMutation = useMutation({
-        mutationFn: async ({ parcelId, newStatus }) => {
-            const response = await axiosSecure.patch(`/parcel/${parcelId}/rider`, {
-                delivery_status: newStatus
+    // MARKED CHANGE: useMutation for cash-out functionality
+    const cashOutMutation = useMutation({
+        mutationFn: async (parcelId) => {
+            // Assuming your backend updates cash_out_time to current timestamp
+            const response = await axiosSecure.patch(`/parcels/${parcelId}/update`, {
+                cashed_out: true,
+                cash_out_time: new Date().toISOString() // Send current time as ISO string
             });
-            console.log(response)
             return response.data;
         },
-        onSuccess: (data, variables) => {
+        onSuccess: (data) => {
             if (data.modifiedCount) {
                 Swal.fire({
-                    title: "Success!",
-                    text: `Parcel status updated to ${variables.newStatus}.`,
+                    title: "Cashed Out!",
+                    text: "Earning successfully cashed out.",
                     icon: "success"
                 });
-                queryClient.invalidateQueries(['riderAssignedParcels', userId]); // Invalidate to refetch updated parcels
+                queryClient.invalidateQueries(['myDeliveredParcels', riderId]); // Invalidate to refetch updated parcels
             } else {
                 Swal.fire({
                     title: "Opps!",
-                    text: "There might be some issue updating the parcel status.",
+                    text: "There might be an issue cashing out.",
                     icon: "error"
                 });
             }
         },
         onError: (err) => {
-            console.error("Error updating parcel status:", err);
+            console.error("Error cashing out:", err);
             Swal.fire({
                 title: "Error!",
-                text: "Failed to update parcel status. Please try again.",
+                text: "Failed to cash out. Please try again.",
                 icon: "error"
             });
         },
     });
 
-    // Handler for Pick Up button
-    const handlePickUp = (parcel) => {
-        Swal.fire({
-            title: "Confirm Pick Up?",
-            text: `Are you sure you want to pick up parcel "${parcel.parcelName}"?`,
-            icon: "question",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, Pick Up!"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                updateParcelStatusMutation.mutate({
-                    parcelId: parcel._id,
-                    newStatus: 'in_transit'
-                });
-            }
-        });
+    // MARKED CHANGE: Calculate Rider Earning
+    const calculateRiderEarning = (parcel) => {
+        if (!parcel.cost || typeof parcel.cost !== 'number') {
+            return 'N/A'; // Or 0, depending on how you want to handle missing cost
+        }
+        const cost = parcel.cost;
+        if (parcel.receiverDistrict === parcel.senderDistrict) {
+            return (cost * 0.75).toFixed(2); // 75% earning
+        } else {
+            return (cost * 0.35).toFixed(2); // 35% earning
+        }
     };
 
-    // Handler for Deliver Parcel button (same district)
-    const handleDeliverParcel = (parcel) => {
+    // MARKED CHANGE: Handler for cash-out button
+    const handleCashOut = (parcel) => {
         Swal.fire({
-            title: "Confirm Delivery?",
-            text: `Are you sure you want to deliver parcel "${parcel.parcelName}"?`,
+            title: "Confirm Cash Out?",
+            text: `Are you sure you want to cash out earning for parcel "${parcel.parcelName}"?`,
             icon: "question",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, Deliver!"
+            confirmButtonText: "Yes, Cash Out!"
         }).then((result) => {
             if (result.isConfirmed) {
-                updateParcelStatusMutation.mutate({
-                    parcelId: parcel._id,
-                    newStatus: 'delivered'
-                });
-            }
-        });
-    };
-
-    // Handler for Deliver to Wire House button (different district)
-    const handleDeliverToWireHouse = (parcel) => {
-        Swal.fire({
-            title: "Confirm Handover?",
-            text: `Are you sure you want to deliver parcel "${parcel.parcelName}" to the wire house?`,
-            icon: "question",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, Handover!"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                updateParcelStatusMutation.mutate({
-                    parcelId: parcel._id,
-                    newStatus: 'delivered_to_wire_house'
-                });
+                cashOutMutation.mutate(parcel._id); // Trigger the cash-out mutation
             }
         });
     };
@@ -139,19 +103,22 @@ const PendingDelivery = () => { // Renamed component
     // Handler for viewing parcel details (optional)
     const handleViewDetails = (parcel) => {
         console.log(parcel)
-        const parcelId = parcel._id;
         const assignedRiderInfo = parcel.assigned_rider_name ?
             `<p class="text-sm text-gray-600 mb-1"><strong>Assigned Rider:</strong> ${parcel.assigned_rider_name} (${parcel.assigned_rider_email || 'N/A'})</p>
        <p class="text-sm text-gray-600 mb-1"><strong>Rider ID:</strong> ${parcel.assigned_rider_id || 'N/A'}</p>` :
             `<p class="text-sm text-gray-600 mb-1"><strong>Assigned Rider:</strong> Not yet assigned</p>`;
 
-        const paymentTime = parcel.payment_time ? format(new Date(parcel.payment_time), 'dd MMM yyyy HH:mm') :
+        const paymentTime = parcel.payment_time && parcel.payment_time ?
+            format(new Date(parcel.payment_time), 'dd MMM yyyy HH:mm') :
             'N/A';
 
         const creationDate = parcel.creation_date ?
             format(new Date(parcel.creation_date), 'dd MMM yyyy HH:mm') :
             'N/A';
 
+        const cashOutTime = parcel.cash_out_time && parcel.cash_out_time ?
+            format(new Date(parseInt(parcel.cash_out_time)), 'dd MMM yyyy HH:mm') :
+            'Not Cashed Out';
 
         Swal.fire({
             title: `<span class="text-2xl font-bold text-gray-800">Parcel Details</span>`,
@@ -172,7 +139,8 @@ const PendingDelivery = () => { // Renamed component
           <p class="text-base text-gray-700"><strong>Created By:</strong> ${parcel.created_by || 'N/A'}</p>
           <p class="text-base text-gray-700"><strong>Creation Date:</strong> ${creationDate}</p>
           <p class="text-base text-gray-700"><strong>Payment Time:</strong> ${paymentTime}</p>
-          <p class="text-base text-gray-700"><strong>Parcel Id:</strong> ${parcelId}</p>
+          <p class="text-base text-gray-700"><strong>Parcel ID:</strong> ${parcel._id}</p>
+          <p class="text-base text-gray-700"><strong>Cash Out Time:</strong> ${cashOutTime}</p>
           <hr class="border-t border-gray-300 my-2">
           <h4 class="font-semibold text-gray-800 mt-4 mb-2">Sender Details:</h4>
           <p class="text-sm text-gray-600 mb-1"><strong>Name:</strong> ${parcel.senderName || 'N/A'}</p>
@@ -211,7 +179,7 @@ const PendingDelivery = () => { // Renamed component
 
 
     if (isRoleLoading || isLoadingParcels) {
-        return <LoadingMini></LoadingMini>;
+        return <LoadingMini />;
     }
 
     if (isError) {
@@ -219,11 +187,11 @@ const PendingDelivery = () => { // Renamed component
     }
 
     return (
-        <div className="mx-auto p-4 font-sans">
-            <h2 className="text-3xl font-bold text-secondary-content mb-6 text-left">Rider Pending Tasks</h2> {/* Updated Heading */}
+        <div className="container mx-auto p-4 font-sans">
+            <h2 className="text-3xl font-bold text-secondary-content mb-6 text-left">My Delivered Parcels</h2>
 
             {parcels.length === 0 ? (
-                <p className="text-secondary-content text-center py-8">No pending tasks found.</p>
+                <p className="text-secondary-content text-center py-8">No delivered parcels found.</p>
             ) : (
                 <div className="overflow-x-auto p-4">
                     <table className="text-primary-content table divide-y divide-gray-500">
@@ -231,20 +199,20 @@ const PendingDelivery = () => { // Renamed component
                         <thead className='divide-y divide-gray-500'>
                             <tr className="text-sm uppercase leading-normal rounded-lg">
                                 <th className="py-3 px-6 text-left rounded-tl-lg rounded-bl-lg">Parcel Name</th>
-                                {/* <th className="py-3 px-6 text-left">Tracking ID</th> */}
+                                <th className="py-3 px-6 text-left">Tracking ID</th>
                                 <th className="py-3 px-6 text-left">Sender District</th>
                                 <th className="py-3 px-6 text-left">Receiver District</th>
-                                {/* <th className="py-3 px-6 text-center">Delivery Status</th> */}
-                                <th className="py-3 px-6 text-center rounded-tr-lg rounded-br-lg">Actions Buttons</th>
+                                <th className="py-3 px-6 text-left">Cost (BDT)</th>
+                                <th className="py-3 px-6 text-left">Rider Earning (৳)</th>
+                                <th className="py-3 px-6 text-center">Delivery Status</th>
+                                <th className="py-3 px-6 text-left">Delivered At</th>
+                                <th className="py-3 px-6 text-center rounded-tr-lg rounded-br-lg">Actions</th>
                             </tr>
                         </thead>
                         {/* Table Body */}
                         <tbody className="text-sm font-light divide-y divide-gray-500">
                             {parcels.map((parcel, index) => (
-                                <tr
-                                    // onClick={() => handleViewDetails(parcel)}
-                                    key={parcel._id}
-                                    className={index % 2 === 0 ? 'bg-base-100' : 'bg-base-300'}>
+                                <tr key={parcel._id.$oid || parcel._id} className={index % 2 === 0 ? 'bg-base-100' : 'bg-base-300'}>
                                     {/* Parcel Name */}
                                     <td className="py-3 px-6 text-left rounded-tl-lg rounded-bl-lg">
                                         <span
@@ -256,9 +224,9 @@ const PendingDelivery = () => { // Renamed component
                                         </span>
                                     </td>
                                     {/* Tracking ID */}
-                                    {/* <td className="py-3 px-6 text-left">
+                                    <td className="py-3 px-6 text-left">
                                         {parcel.tracking_id || 'N/A'}
-                                    </td> */}
+                                    </td>
                                     {/* Sender District */}
                                     <td className="py-3 px-6 text-left">
                                         {parcel.senderDistrict || 'N/A'}
@@ -267,18 +235,27 @@ const PendingDelivery = () => { // Renamed component
                                     <td className="py-3 px-6 text-left">
                                         {parcel.receiverDistrict || 'N/A'}
                                     </td>
+                                    {/* Cost */}
+                                    <td className="py-3 px-6 text-left">
+                                        {parcel.cost ? `${parcel.cost} ৳` : 'N/A'}
+                                    </td>
+                                    {/* MARKED CHANGE: Rider Earning Column */}
+                                    <td className="py-3 px-6 text-left font-semibold text-green-700">
+                                        {calculateRiderEarning(parcel)} ৳
+                                    </td>
                                     {/* Delivery Status */}
-                                    {/* <td className="py-3 px-6 text-center">
-                                        <span className={`badge ${parcel.delivery_status === 'rider_assigned' ? 'badge-warning' :
-                                            parcel.delivery_status === 'in_transit' ? 'badge-info' :
-                                                'badge-neutral' 
-                                            } font-semibold text-gray-800 py-2 px-3`}>
+                                    <td className="py-3 px-6 text-center">
+                                        <span className={`badge badge-success font-semibold text-gray-800 py-2 px-3`}>
                                             {parcel.delivery_status || 'N/A'}
                                         </span>
-                                    </td> */}
+                                    </td>
+                                    {/* Delivered At */}
+                                    <td className="py-3 px-6 text-left">
+                                        {parcel.updated_at ? format(new Date(parcel.updated_at), 'dd MMM yyyy HH:mm') : 'N/A'}
+                                    </td>
                                     {/* Actions */}
-                                    <td className=" p-0 text-center rounded-tr-lg rounded-br-lg">
-                                        <div className=" items-center justify-center space-x-2">
+                                    <td className="py-3 px-6 text-center rounded-tr-lg rounded-br-lg">
+                                        <div className="flex items-center justify-center space-x-2">
                                             <button
                                                 className="btn btn-sm btn-ghost btn-circle tooltip tooltip-bottom"
                                                 data-tip="View Details"
@@ -287,53 +264,21 @@ const PendingDelivery = () => { // Renamed component
                                                 <FaEye className="w-5 h-5 text-blue-500" />
                                             </button>
 
-                                            {/* Conditional Action Buttons */}
-                                            {parcel.delivery_status === 'rider_assigned' && (
+                                            {/* MARKED CHANGE: Cash Out Button / Cashed Out Text */}
+                                            {parcel.cashed_out ? (
+                                                <span className="badge badge-info font-semibold py-5 px-3">Cashed out</span>
+                                            ) : (
                                                 <button
-                                                    className="badge badge-warning btn tooltip tooltip-bottom "
-                                                    data-tip="Pick Up Parcel"
-                                                    onClick={() => handlePickUp(parcel)}
-                                                    disabled={updateParcelStatusMutation.isPending && updateParcelStatusMutation.variables?.parcelId === parcel._id}
+                                                    className="btn btn-sm btn-ghost btn-circle tooltip tooltip-bottom text-yellow-600"
+                                                    data-tip="Cash Out Earning"
+                                                    onClick={() => handleCashOut(parcel)}
+                                                    disabled={cashOutMutation.isPending && cashOutMutation.variables === (parcel._id.$oid || parcel._id)}
                                                 >
-                                                    {updateParcelStatusMutation.isPending && updateParcelStatusMutation.variables?.parcelId === parcel._id ?
+                                                    {cashOutMutation.isPending && cashOutMutation.variables === (parcel._id.$oid || parcel._id) ?
                                                         <span className="loading loading-spinner loading-sm"></span> :
-                                                        <div className="">
-                                                            PicK Up Parcel
-                                                        </div>
+                                                        <FaMoneyBillWave className="w-5 h-5" />
                                                     }
                                                 </button>
-                                            )}
-
-                                            {parcel.delivery_status === 'in_transit' && (
-                                                parcel.wire_house === parcel.receiverDistrict ? (
-                                                    <button
-                                                        className="badge badge-info btn tooltip tooltip-bottom text-purple-500"
-                                                        data-tip="Deliver Parcel"
-                                                        onClick={() => handleDeliverParcel(parcel)}
-                                                        disabled={updateParcelStatusMutation.isPending && updateParcelStatusMutation.variables?.parcelId === (parcel._id.$oid || parcel._id)}
-                                                    >
-                                                        {updateParcelStatusMutation.isPending && updateParcelStatusMutation.variables?.parcelId === (parcel._id.$oid || parcel._id) ?
-                                                            <span className="loading loading-spinner loading-sm"></span> :
-                                                            <div className="">
-                                                                Deliver to Receiver
-                                                            </div>
-                                                        }
-                                                    </button>
-                                                ) : (
-                                                    <button
-                                                        className="badge badge-info btn tooltip tooltip-bottom"
-                                                        data-tip="Deliver to Wire House"
-                                                        onClick={() => handleDeliverToWireHouse(parcel)}
-                                                        disabled={updateParcelStatusMutation.isPending && updateParcelStatusMutation.variables?.parcelId === (parcel._id.$oid || parcel._id)}
-                                                    >
-                                                        {updateParcelStatusMutation.isPending && updateParcelStatusMutation.variables?.parcelId === (parcel._id.$oid || parcel._id) ?
-                                                            <span className="loading loading-spinner loading-sm"></span> :
-                                                            <div className="">
-                                                                Deliver to Were House
-                                                            </div>
-                                                        }
-                                                    </button>
-                                                )
                                             )}
                                         </div>
                                     </td>
@@ -347,4 +292,4 @@ const PendingDelivery = () => { // Renamed component
     );
 };
 
-export default PendingDelivery;
+export default MyDeliveredParcel;
