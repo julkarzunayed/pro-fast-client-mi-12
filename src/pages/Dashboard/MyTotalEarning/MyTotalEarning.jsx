@@ -38,7 +38,7 @@ const MyTotalEarning = () => {
         staleTime: 5 * 60 * 1000,
     });
 
-    // MARKED CHANGE: Function to calculate earning for a single parcel
+    // MARKED CHANGE: Function to calculate earning for a single parcel dsf
     const calculateParcelEarning = (parcel) => {
         if (!parcel.cost || typeof parcel.cost !== 'number') {
             return 0; // Return 0 or handle error for missing cost
